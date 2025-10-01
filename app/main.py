@@ -1,6 +1,8 @@
 from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import JSONResponse
 
+from .rest_api import router as wishes_router
+
 app = FastAPI(title="SecDev Course App", version="0.1.0")
 
 
@@ -55,3 +57,6 @@ def get_item(item_id: int):
         if it["id"] == item_id:
             return it
     raise ApiError(code="not_found", message="item not found", status=404)
+
+
+app.include_router(wishes_router)
