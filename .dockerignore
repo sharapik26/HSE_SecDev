@@ -1,17 +1,69 @@
+# Git
 .git
 .gitignore
 .gitattributes
+.gitleaks.toml
+
+# Python cache
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
-*.sqlite
-*.db
+.Python
+*.so
+
+# Virtual environments
 .venv/
-dist/
-build/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Testing
 .pytest_cache/
 .coverage
 htmlcov/
-node_modules/
+.tox/
+.nox/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/
+*.egg
+
+# Database
+*.sqlite
+*.db
+
+# Environment files (secrets)
 .env
+.env.*
+!.env.example
+
+# Documentation (not needed in container)
+docs/
+*.md
+!README.md
+
+# CI/CD configs
+.github/
+.pre-commit-config.yaml
+.semgrep.yaml
+
+# Docker
+Dockerfile*
+docker-compose*.yml
+compose.yaml
+.dockerignore
+
+# Misc
+node_modules/
+*.log
+tmp/
+.pre-commit-cache/
