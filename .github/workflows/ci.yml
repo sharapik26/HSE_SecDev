@@ -10,7 +10,7 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  lint-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -36,3 +36,44 @@ jobs:
 
       - name: Pre-commit (all files)
         run: pre-commit run --all-files
+
+  container:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Hadolint - Dockerfile linter
+      - name: Hadolint
+        uses: hadolint/hadolint-action@v3.1.0
+        with:
+          dockerfile: Dockerfile
+          config: .hadolint.yaml
+
+      # Build container image
+      - name: Build Docker image
+        run: docker build -t wishlist-app:${{ github.sha }} .
+
+      # Verify non-root user
+      - name: Verify non-root user
+        run: |
+          docker run --rm wishlist-app:${{ github.sha }} id -u | grep -v '^0$'
+          echo "✅ Container runs as non-root user"
+
+      # Trivy - container vulnerability scanner
+      - name: Trivy vulnerability scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: wishlist-app:${{ github.sha }}
+          format: 'table'
+          exit-code: '0'
+          vuln-type: 'os,library'
+          severity: 'CRITICAL,HIGH'
+
+      # Test healthcheck
+      - name: Test container healthcheck
+        run: |
+          docker run -d --name test-app -p 8000:8000 wishlist-app:${{ github.sha }}
+          sleep 10
+          curl -f http://localhost:8000/health || exit 1
+          echo "✅ Healthcheck passed"
+          docker stop test-app
