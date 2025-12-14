@@ -20,7 +20,7 @@ RUN pip install --no-cache-dir --upgrade pip && \
 
 # Copy source and run tests
 COPY . .
-RUN pip install --no-cache-dir -r requirements-dev.txt && \
+RUN pip install --no-cache-dir -r requirements.txt -r requirements-dev.txt && \
     pytest -q
 
 # -----------------------------------------------------------------------------
