@@ -6,6 +6,8 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from .rest_api import router as wishes_router
+
 app = FastAPI(title="SecDev Course App", version="0.1.0")
 
 MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", "1048576"))
@@ -127,4 +129,7 @@ def get_item(item_id: int):
     for it in _DB["items"]:
         if it["id"] == item_id:
             return it
-    raise ApiError(title="not_found", detail="item not found", status=404)
+    raise ApiError(code="not_found", message="item not found", status=404)
+
+
+app.include_router(wishes_router)
