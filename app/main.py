@@ -1,28 +1,19 @@
 import os
+from pathlib import Path
 from uuid import uuid4
 
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
+from .errors import ApiError
+from .security_files import SaveResult, save_uploaded_file
+
 app = FastAPI(title="SecDev Course App", version="0.1.0")
 
 MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", "1048576"))
-
-
-class ApiError(Exception):
-    def __init__(
-        self,
-        title: str,
-        detail: str,
-        status: int = 400,
-        type_: str = "about:blank",
-    ):
-        self.title = title
-        self.detail = detail
-        self.status = status
-        self.type_ = type_
+MAX_UPLOAD_BYTES = int(os.getenv("MAX_UPLOAD_BYTES", "500000"))
 
 
 def _correlation_id(request: Request) -> str:
@@ -69,6 +60,10 @@ async def add_correlation_and_limits(request: Request, call_next):
     response = await call_next(request)
     response.headers["X-Correlation-Id"] = _correlation_id(request)
     return response
+
+
+def _get_upload_root() -> Path:
+    return Path(os.getenv("UPLOAD_DIR", "./uploads")).resolve()
 
 
 @app.exception_handler(ApiError)
@@ -128,3 +123,15 @@ def get_item(item_id: int):
         if it["id"] == item_id:
             return it
     raise ApiError(title="not_found", detail="item not found", status=404)
+
+
+@app.post("/upload")
+async def upload_file(file: UploadFile = File(...)) -> dict:
+    root = _get_upload_root()
+    try:
+        saved: SaveResult = await save_uploaded_file(
+            file=file, root=root, max_bytes=MAX_UPLOAD_BYTES
+        )
+    except ApiError as exc:
+        raise exc
+    return {"stored_as": saved.name, "content_type": saved.content_type}
