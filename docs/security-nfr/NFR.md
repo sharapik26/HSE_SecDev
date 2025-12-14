@@ -12,4 +12,4 @@
 | NFR-08 | TLS/Headers hardening | Только TLS 1.2+; HSTS `max-age ≥ 31536000`, `includeSubDomains`; запрещён mixed-content | Ночной compliance-скан (sslyze/zap) фиксирует соответствие | edge | Medium |
 | NFR-09 | Аудит мутаций | 100% операций create/update/delete по `/wishes` логируются в audit-stream с `correlation_id`; ретенция ≥90 дней | Интеграционный тест + спотовая проверка логов | observability | Medium |
 
-Дополнительно: NFR-01/02/03/06/07 являются блокирующими для выхода в прод (gate в CI/CD); остальные обязательны к закрытию до релиза M3.
+Дополнительно: NFR-01/02/03/06/07 являются блокирующими для выхода в прод (gate в CI/CD); остальные обязательны к закрытию до релиса M3.
