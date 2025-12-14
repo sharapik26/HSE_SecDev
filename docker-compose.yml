@@ -21,12 +21,4 @@ services:
       timeout: 5s
       retries: 3
       start_period: 10s
-    # Security hardening
-    read_only: true
-    tmpfs:
-      - /tmp:mode=1777,size=10m
-    security_opt:
-      - no-new-privileges:true
-    cap_drop:
-      - ALL
     restart: unless-stopped

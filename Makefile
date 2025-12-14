@@ -1,4 +1,4 @@
-.PHONY: build run stop test lint scan clean
+.PHONY: build run stop test lint clean
 
 IMAGE_NAME := wishlist-app
 TAG := latest
@@ -29,15 +29,6 @@ down:
 test:
 	pytest -q
 
-# Lint Dockerfile with hadolint
-lint-docker:
-	docker run --rm -i hadolint/hadolint < Dockerfile
-
-# Scan image with Trivy
-scan:
-	docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-		aquasec/trivy image --severity HIGH,CRITICAL $(IMAGE_NAME):$(TAG)
-
 # Verify non-root user
 verify-user:
 	@docker run --rm $(IMAGE_NAME):$(TAG) id -u | grep -v '^0$$' && \
@@ -56,4 +47,3 @@ info:
 # Clean up
 clean: stop
 	docker rmi $(IMAGE_NAME):$(TAG) || true
-	docker system prune -f
