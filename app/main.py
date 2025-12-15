@@ -8,6 +8,7 @@ from fastapi.responses import JSONResponse
 from pydantic import BaseModel, Field
 
 from .errors import ApiError
+from .rest_api import router as wishes_router
 from .security_files import SaveResult, save_uploaded_file
 
 app = FastAPI(title="SecDev Course App", version="0.1.0")
@@ -139,3 +140,6 @@ async def upload_file(file: UploadFile = File(...)) -> dict:
     except ApiError as exc:
         raise exc
     return {"stored_as": saved.name, "content_type": saved.content_type}
+
+
+app.include_router(wishes_router)
