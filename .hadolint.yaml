@@ -1,0 +1,3 @@
+ignored:
+  - DL3008  # apt-get without version (using slim base)
+  - DL3013  # pip without version (versions in requirements.txt)
