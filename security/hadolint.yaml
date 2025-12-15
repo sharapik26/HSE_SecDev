@@ -1,0 +1,14 @@
+# Hadolint configuration for course project
+# See: https://github.com/hadolint/hadolint
+
+ignored:
+  # Ignore specific rules if needed
+  # - DL3008  # Pin versions in apt-get install
+  # - DL3018  # Pin versions in apk add
+
+trustedRegistries:
+  - docker.io
+  - ghcr.io
+
+failure-threshold: warning
+
