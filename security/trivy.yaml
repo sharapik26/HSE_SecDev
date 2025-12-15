@@ -1,0 +1,19 @@
+# Trivy configuration for course project
+# See: https://aquasecurity.github.io/trivy/
+
+scan:
+  scanners:
+    - vuln
+    - config
+  severity:
+    - CRITICAL
+    - HIGH
+
+format: "json"
+
+# Ignore unfixed vulnerabilities
+ignore-unfixed: false
+
+# Exit code when vulnerabilities are found
+exit-code: 0
+

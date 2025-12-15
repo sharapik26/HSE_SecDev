@@ -1,0 +1,17 @@
+# Checkov configuration for course project
+# See: https://www.checkov.io/2.Basics/CLI%20Command%20Reference.html
+
+quiet: false
+compact: true
+framework:
+  - kubernetes
+  - terraform
+  - dockerfile
+  - docker_compose
+
+skip-check: []
+# Example of skipping checks:
+# skip-check:
+#   - CKV_DOCKER_2  # HEALTHCHECK instruction
+#   - CKV_K8S_43    # Image should use digest
+
