@@ -122,7 +122,11 @@ def get_item(item_id: int):
     for it in _DB["items"]:
         if it["id"] == item_id:
             return it
-    raise ApiError(title="not_found", detail="item not found", status=404)
+    raise ApiError(
+        title="not_found",
+        detail=f"item with ID {item_id} not found",
+        status=404,
+    )
 
 
 @app.post("/upload")
