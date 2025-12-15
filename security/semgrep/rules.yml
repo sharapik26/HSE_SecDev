@@ -1,0 +1,39 @@
+rules:
+  - id: py-unsafe-html-echo
+    languages: [python]
+    message: "Потенциально небезопасный вывод пользовательских данных в HTMLResponse"
+    severity: WARNING
+    patterns:
+      - pattern: |
+          HTMLResponse(f"...{$X}...")
+    metadata:
+      category: security
+      cwe: "CWE-79: Cross-site Scripting"
+
+  - id: py-hardcoded-secrets
+    languages: [python]
+    message: "Обнаружена потенциально захардкоженная секретная информация"
+    severity: ERROR
+    patterns:
+      - pattern-either:
+          - pattern: |
+              password\s*=\s*["']...
+          - pattern: |
+              api_key\s*=\s*["']...
+          - pattern: |
+              secret\s*=\s*["']...
+    metadata:
+      category: security
+      cwe: "CWE-798: Use of Hard-coded Credentials"
+
+  - id: py-insecure-random
+    languages: [python]
+    message: "Использование небезопасного генератора случайных чисел для криптографических целей"
+    severity: WARNING
+    patterns:
+      - pattern: random.randint(...)
+      - pattern: random.choice(...)
+    metadata:
+      category: security
+      cwe: "CWE-330: Use of Insufficiently Random Values"
+
